@@ -164,4 +164,4 @@ storage/
 
 #DatasetImagenes
 UTKFace_Processed/
-src/aging_estimato_model.keras
+src/aging_estimator_model.keras
