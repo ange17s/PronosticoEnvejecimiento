@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Estimador de Edad Biológica Facial con Deep Learning
 
 Este repositorio contiene la implementación completa de un sistema de **Regresión de Edad Biológica (Age Regression)** utilizando una **Red Neuronal Convolucional (CNN)** entrenada con TensorFlow/Keras y empaquetada en una aplicación de escritorio interactiva desarrollada con **Flet**.
