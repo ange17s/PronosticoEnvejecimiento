@@ -1,81 +1,179 @@
-# DiagnSticoenfermedadesredes app
+🧬 Estimador de Edad Biológica Facial con Deep Learning
 
-## Run the app
+Este repositorio contiene la implementación completa de un sistema de Regresión de Edad Biológica (Age Regression) basado en Visión por Computadora, utilizando una Red Neuronal Convolucional (CNN) desarrollada con TensorFlow/Keras, integrada en una aplicación de escritorio construida con Flet.
 
-### uv
+📌 Descripción General
 
-Run as a desktop app:
+El proyecto estima la edad biológica facial a partir de una imagen, utilizando un modelo de Deep Learning entrenado con el dataset UTKFace.
+Incluye todo el pipeline completo:
 
-```
-uv run flet run
-```
+Preprocesamiento de datos
 
-Run as a web app:
+Entrenamiento con EarlyStopping
 
-```
-uv run flet run --web
-```
+Evaluación del modelo
 
-### Poetry
+Aplicación de escritorio interactiva con Flet
 
-Install dependencies from `pyproject.toml`:
+Visualización de métricas de entrenamiento
 
-```
-poetry install
-```
+🧠 Arquitectura del Modelo (CNN)
 
-Run as a desktop app:
+El modelo implementado es una CNN para regresión continua, con la siguiente estructura:
 
-```
-poetry run flet run
-```
+Entrada: imágenes RGB de 128 × 128 × 3, normalizadas.
 
-Run as a web app:
+Bloques Convolucionales:
+Tres bloques:
+Conv2D → MaxPooling2D → Dropout(0.25)
 
-```
-poetry run flet run --web
-```
+Capa densa oculta:
 
-For more details on running the app, refer to the [Getting Started Guide](https://flet.dev/docs/getting-started/).
+512 neuronas
 
-## Build the app
+Activación ReLU
 
-### Android
+Dropout(0.5)
 
-```
-flet build apk -v
-```
+Salida:
 
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://flet.dev/docs/publish/android/).
+1 neurona con activación lineal
 
-### iOS
+Compilación:
 
-```
-flet build ipa -v
-```
+Optimizador: Adam
 
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://flet.dev/docs/publish/ios/).
+Pérdida: MAE (Mean Absolute Error)
 
-### macOS
+🔧 Proceso de Implementación
+1. Preprocesamiento
 
-```
-flet build macos -v
-```
+Carga de imágenes del dataset UTKFace
 
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://flet.dev/docs/publish/macos/).
+Extracción de la edad desde el nombre del archivo
 
-### Linux
+Detección y recorte de rostro
 
-```
-flet build linux -v
-```
+Redimensionamiento a 128×128
 
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://flet.dev/docs/publish/linux/).
+Normalización
 
-### Windows
+División en train / test
 
-```
-flet build windows -v
-```
+2. Entrenamiento
 
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
+Uso de MAE como función de pérdida
+
+EarlyStopping con paciencia = 5 (monitorizando val_loss)
+
+Registro del historial de pérdidas
+
+Guardado del modelo en:
+aging_estimator_model.keras
+
+3. Evaluación
+
+El modelo final alcanza un MAE ≈ 8.77 años en test.
+
+4. Integración con Flet
+
+El modelo entrenado se integra en una app que permite:
+
+Cargar imágenes
+
+Procesarlas
+
+Mostrar la predicción de edad biológica
+
+📂 Estructura del Proyecto
+📁 proyecto
+ ├── 📁 data
+ ├── 📁 src
+ │    ├── preprocesamiento.py
+ │    ├── entrenamiento.py
+ │    ├── logic.py
+ │    ├── interfaz.py
+ │    ├── generadorimagenes.py
+ │    └── main_app.py
+ ├── aging_estimator_model.keras
+ ├── requirements.txt
+ └── README.md
+
+Descripción de Módulos
+Archivo	Descripción
+preprocesamiento.py	Carga, limpieza y preparación del dataset (recorte, resize, normalización, labels).
+entrenamiento.py	Construcción del modelo, entrenamiento, EarlyStopping y guardado del modelo.
+logic.py	Inferencia: carga del modelo, procesar imagen y predecir edad biológica.
+interfaz.py	Componentes visuales de la interfaz Flet.
+main_app.py	Lógica principal de la aplicación Flet.
+generadorimagenes.py	Gráficas de entrenamiento (MAE train/validation).
+requirements.txt	Bibliotecas necesarias del proyecto.
+🔄 Flujo de Arquitectura
+🔹 Offline (Entrenamiento)
+preprocesamiento.py → entrenamiento.py → aging_estimator_model.keras
+
+🔹 Online (Aplicación)
+aging_estimator_model.keras → main_app.py (App Flet)
+
+🚀 Instalación y Uso
+1. Prerrequisitos
+
+Python 3.8+
+
+2. Clonar el Repositorio
+git clone https://github.com/tu-usuario/nombre-del-repositorio.git
+cd nombre-del-repositorio
+
+3. Crear y Activar Entorno Virtual
+python -m venv venv
+
+
+Linux/macOS
+
+source venv/bin/activate
+
+
+Windows
+
+.\venv\Scripts\activate
+
+
+Instalar dependencias:
+
+pip install -r requirements.txt
+
+
+Moverse a la carpeta de código:
+
+cd src
+
+4. Descargar el Dataset UTKFace
+git clone https://github.com/UTKFace/UTKFace_Dataset.git data/UTKFace
+
+
+Asegúrate de que la ruta coincida con lo indicado en preprocesamiento.py.
+
+5. Ejecutar
+🔧 Entrenar el modelo (opcional)
+python entrenamiento.py
+
+
+Esto generará o actualizará aging_estimator_model.keras.
+
+🖥️ Ejecutar la aplicación Flet
+flet run
+
+
+Se abrirá la interfaz gráfica donde podrás cargar una foto y obtener la predicción.
+
+🏁 Estado: Proyecto Funcional y Extensible
+
+La arquitectura modular permite:
+
+Reentrenar el modelo
+
+Cambiar datasets
+
+Modificar la interfaz
+
+Exportar a aplicaciones móviles (Android/iOS) usando Fletndows Packaging Guide](https://flet.dev/docs/publish/windows/).
